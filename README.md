@@ -1,20 +1,57 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Super Earth Vanguard — 2.5D
 
-# Run and deploy your AI Studio app
+A Helldivers 2-inspired browser game built with React, TypeScript, and HTML5 Canvas. Fight off Terminid swarms on a 2.5D battlefield using rifles, grenades, and orbital stratagems.
 
-This contains everything you need to run your app locally.
+## Getting Started
 
-View your app in AI Studio: https://ai.studio/apps/drive/1XHDTfYmK45PG0hqbEvSiQ9nY689Gcmzz
+```bash
+npm install
+npm run dev
+```
 
-## Run Locally
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-**Prerequisites:**  Node.js
+## Controls
 
+| Input | Action |
+|---|---|
+| `W / S` | Move forward / backward (depth) |
+| `A / D` | Move left / right |
+| `Space` | Jump |
+| `Left Click` | Fire rifle |
+| `Right Click` | Throw grenade |
+| `Hold Ctrl` | Open stratagem menu |
+| `Arrow Keys` (while Ctrl held) | Enter stratagem code |
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Stratagems
+
+Activate by holding `Ctrl` and entering the arrow key sequence shown in the HUD. Each stratagem has a cooldown before it can be used again.
+
+| Stratagem | Code | Effect |
+|---|---|---|
+| Eagle Strafing Run | ↑ ← ← | Strafing pass across the target area |
+| Orbital Precision Strike | → → ↑ | High-damage orbital strike at beacon |
+| Reinforce | ↑ ↓ → ← ↑ | Calls in reinforcements |
+| Supply Pack | ↓ ← ↓ ↑ ↑ → | Resupply drop |
+
+## HUD
+
+- **Top left** — current mission name
+- **Bottom left** — health bar (cyan → orange → red)
+- **Bottom center** — stratagem cards with cooldown timers
+- **Bottom right** — rifle ammo and grenade count
+
+## Tech Stack
+
+- **React 19** + **TypeScript**
+- **HTML5 Canvas** for the game engine
+- **Tailwind CSS** (CDN) for UI
+- **Vite** for development and bundling
+
+## Scripts
+
+```bash
+npm run dev      # Start dev server at localhost:3000
+npm run build    # Production build
+npm run preview  # Preview production build
+```
