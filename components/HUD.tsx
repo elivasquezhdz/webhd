@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Stratagem, GameState } from '../types';
+import { Faction, Stratagem, GameState } from '../types';
+import { FACTION_CONFIGS } from '../constants';
 
 interface HUDProps {
     health: number;
@@ -13,6 +14,8 @@ interface HUDProps {
     stratagems: Stratagem[];
     bullets: { current: number; max: number };
     grenades: { current: number; max: number };
+    score: number;
+    faction: Faction | null;
 }
 
 const DIR = { UP: '↑', DOWN: '↓', LEFT: '←', RIGHT: '→' } as const;
@@ -20,7 +23,8 @@ const dirIcon = (d: string) => DIR[d as keyof typeof DIR] ?? '·';
 
 const HUD: React.FC<HUDProps> = ({
     health, maxHealth, activeStratagemInput, currentStratagem,
-    gameState, missionName, isMenuOpen, stratagems, bullets, grenades
+    gameState, missionName, isMenuOpen, stratagems, bullets, grenades,
+    score, faction
 }) => {
     const [, setTick] = useState(0);
     useEffect(() => {
@@ -28,25 +32,41 @@ const HUD: React.FC<HUDProps> = ({
         return () => clearInterval(id);
     }, []);
 
-    if (gameState === 'BRIEFING' || gameState === 'DROPPING') return null;
+    if (gameState === 'BRIEFING' || gameState === 'DROPPING' || gameState === 'FACTION_SELECT') return null;
 
     const healthPct = (health / maxHealth) * 100;
     const now = Date.now();
+    const factionColor = faction ? FACTION_CONFIGS[faction].color : '#ffee00';
+    const factionLabel = faction ? FACTION_CONFIGS[faction].label : '';
 
     return (
         <div className="fixed inset-0 pointer-events-none flex flex-col justify-between p-6 font-orbitron select-none">
 
             {/* ── Top bar ── */}
             <div className="flex justify-between items-start">
-                <div className="bg-black/70 border-l-4 border-[#ffee00] px-4 py-2">
-                    <div className="text-[9px] text-[#ffee00]/50 uppercase tracking-[0.2em]">Mission</div>
-                    <div className="text-base font-black tracking-wider text-[#ffee00]">
+                <div className="bg-black/70 border-l-4 px-4 py-2" style={{ borderColor: factionColor }}>
+                    <div className="text-[9px] uppercase tracking-[0.2em] mb-0.5" style={{ color: factionColor + '80' }}>Planet</div>
+                    <div className="text-base font-black tracking-wider" style={{ color: factionColor }}>
                         {missionName.toUpperCase()}
                     </div>
+                    {faction && (
+                        <div className="text-[8px] uppercase tracking-widest mt-0.5" style={{ color: factionColor + '60' }}>
+                            vs {factionLabel}
+                        </div>
+                    )}
                 </div>
+
+                {/* Score */}
+                <div className="bg-black/70 border border-[#ffee00]/20 px-5 py-2 text-center">
+                    <div className="text-[9px] text-[#ffee00]/40 uppercase tracking-[0.2em]">Score</div>
+                    <div className="text-2xl font-black tabular-nums text-[#ffee00]">
+                        {score.toLocaleString()}
+                    </div>
+                </div>
+
                 <div className="text-right">
-                    <div className="text-[#ffee00] text-xl font-black italic tracking-tight">SUPER EARTH VANGUARD</div>
-                    <div className="text-white/30 text-[9px] uppercase tracking-widest">Strategic Asset Uplink · Online</div>
+                    <div className="text-[#ffee00] text-xl font-black italic tracking-tight">GALACTIC VANGUARD CORPS</div>
+                    <div className="text-white/30 text-[9px] uppercase tracking-widest">Tactical Uplink · Online</div>
                 </div>
             </div>
 
@@ -114,7 +134,7 @@ const HUD: React.FC<HUDProps> = ({
                 {/* Health */}
                 <div className="flex flex-col gap-1 w-52">
                     <div className="flex justify-between text-[9px] uppercase tracking-widest mb-0.5">
-                        <span className="text-[#00ccff]/60">Helldiver Vitals</span>
+                        <span className="text-[#00ccff]/60">Trooper Vitals</span>
                         <span className={healthPct < 30 ? 'text-red-400 animate-pulse font-bold' : 'text-[#00ccff]/80'}>
                             {Math.ceil(health)} / {maxHealth}
                         </span>
@@ -127,12 +147,11 @@ const HUD: React.FC<HUDProps> = ({
                                 backgroundColor: healthPct > 50 ? '#00ccff' : healthPct > 25 ? '#ffaa00' : '#ff4444'
                             }}
                         />
-                        {/* tick marks */}
                         {[25, 50, 75].map(pct => (
                             <div key={pct} className="absolute top-0 bottom-0 w-px bg-black/40" style={{ left: `${pct}%` }} />
                         ))}
                     </div>
-                    <div className="text-[8px] text-[#00ccff]/30 uppercase tracking-widest">Liberty Protection: Active</div>
+                    <div className="text-[8px] text-[#00ccff]/30 uppercase tracking-widest">Armor Status: Active</div>
                 </div>
 
                 {/* Stratagems always-on bar */}

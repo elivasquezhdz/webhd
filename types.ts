@@ -1,5 +1,6 @@
 
-export type GameState = 'BRIEFING' | 'DROPPING' | 'PLAYING' | 'SUCCESS' | 'FAILED';
+export type Faction = 'BUGS' | 'BOTS' | 'ZOMBIES';
+export type GameState = 'FACTION_SELECT' | 'BRIEFING' | 'DROPPING' | 'PLAYING' | 'SUCCESS' | 'FAILED';
 
 export interface Position {
     x: number;
@@ -9,7 +10,7 @@ export interface Position {
 export interface Entity {
     id: string;
     pos: Position;
-    type: 'HELLDIVER' | 'BUG' | 'BOT' | 'STRATAGEM_BEACON';
+    type: 'TROOPER' | 'BUG' | 'BOT' | 'ZOMBIE' | 'STRATAGEM_BEACON';
     health: number;
     maxHealth: number;
     angle: number;
@@ -40,7 +41,7 @@ export interface Projectile {
     owner: 'PLAYER' | 'ENEMY';
     damage: number;
     life: number;
-    type?: 'BULLET' | 'GRENADE' | 'BEACON';
+    type?: 'BULLET' | 'GRENADE' | 'BEACON' | 'ENEMY_BULLET';
     depth: number;
     vy?: number;
     stratagemType?: Stratagem;
@@ -54,7 +55,7 @@ export enum StratagemType {
 
 export interface Stratagem {
     name: string;
-    code: string[]; 
+    code: string[];
     type: StratagemType;
     cooldown: number;
     lastUsed: number;
